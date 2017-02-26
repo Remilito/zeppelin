@@ -134,7 +134,9 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
     String jsonRequest = "{\"name\":\"" + noteName + "\", \"paragraphs\": [" +
         "{\"title\": \"title1\", \"text\": \"text1\"}," +
         "{\"title\": \"title2\", \"text\": \"text2\"}" +
-        "]}";
+        "{\"title\": \"titleConfig\", \"text\": \"text3\", " +
+        "\"graph\": {\"mode\": \"pieChart\"}, " +
+        "\"colWidth\": 9.0, \"showTitle\": true}]}";
     PostMethod post = httpPost("/notebook/", jsonRequest);
     LOG.info("testNoteCreate \n" + post.getResponseBodyAsString());
     assertThat("test note create method:", post, isAllowed());
@@ -154,13 +156,19 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
       expectedNoteName = "Note " + newNoteId;
     }
     assertEquals("compare note name", expectedNoteName, newNoteName);
-    assertEquals("initial paragraph check failed", 3, newNote.getParagraphs().size());
+    assertEquals("initial paragraph check failed", 4, newNote.getParagraphs().size());
     for (Paragraph p : newNote.getParagraphs()) {
       if (StringUtils.isEmpty(p.getText())) {
         continue;
       }
       assertTrue("paragraph title check failed", p.getTitle().startsWith("title"));
       assertTrue("paragraph text check failed", p.getText().startsWith("text"));
+      if ( p.getTitle() == "titleConfig"){
+        assertEquals("paragraph col width check failed", 9, p.getConfig().get("colWidth"));
+        assertTrue("paragraph show title check failed", ((boolean) p.getConfig().get("title")));
+        String mode = ((Map)p.getConfig().get("graph")).get("mode").toString();
+        assertEquals("paragraph graph mode check failed", "pieChart", mode);
+      }
     }
     // cleanup
     ZeppelinServer.notebook.removeNote(newNoteId, anonymous);
