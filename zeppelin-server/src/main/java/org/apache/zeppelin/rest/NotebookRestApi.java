@@ -950,7 +950,7 @@ public class NotebookRestApi {
 
   private void initParagraph(Paragraph p, NewParagraphRequest request, String user)
       throws IOException {
-    LOG.info("Init Paragraph");
+    LOG.info("Init Paragraph for user {}", user);
     checkIfParagraphIsNotNull(p);
     p.setTitle(request.getTitle());
     p.setText(request.getText());
@@ -993,7 +993,7 @@ public class NotebookRestApi {
 
   private void configureParagraph(Paragraph p, Map< String, Object> newConfig, String user)
       throws IOException {
-    LOG.info("Configure Paragraph");
+    LOG.info("Configure Paragraph for user {}", user);
     if (newConfig == null || newConfig.isEmpty()) {
       LOG.warn("{} is trying to update paragraph {} of note {} with empty config",
               user, p.getId(), p.getNote().getId());
