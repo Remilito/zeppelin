@@ -74,6 +74,7 @@ before_install:
   # check files included in commit range, clear cache if necessay.
   - CHANGEDFILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE)
   - echo $CHANGEDFILES
+  - echo $CHANGEDFILES | grep -c "bower.json"
   - BOWERCHANGED=$(echo $CHANGEDFILES | grep -c "bower.json")
   - CLEARCACHE=$(git log $TRAVIS_COMMIT_RANGE | grep -c -E "clear cache|cache clear")
   - if [ "$BOWERCHANGED" -gt 0 ] || [ "$CLEARCACHE" -gt 0 ]; then echo "Clearing bower_components cache"; rm -r zeppelin-web/bower_components; npm cache clear; else echo "Using cached bower_components."; fi
