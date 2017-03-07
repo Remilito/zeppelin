@@ -69,12 +69,12 @@ matrix:
     - jdk: "oraclejdk7"
       env: PYTHON="3" SCALA_VER="2.11" SPARK_VER="2.0.0" HADOOP_VER="2.6" PROFILE="-Pspark-2.0 -Phadoop-2.6 -Ppyspark -Pscala-2.11" BUILD_FLAG="package -pl spark,python -am -DskipTests -DskipRat" TEST_FLAG="test -DskipRat" MODULES="-pl zeppelin-interpreter,zeppelin-display,spark-dependencies,spark,python" TEST_PROJECTS="-Dtest=org.apache.zeppelin.spark.PySpark*Test,org.apache.zeppelin.python.* -Dpyspark.test.exclude='' -DfailIfNoTests=false"
 
-before_install:
-  - whereis travis
-  - ls /usr/share/travis
+before_cache:
   - CHANGEDFILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE)
   - echo $CHANGEDFILES 
-  - if [ `echo $CHANGEDFILES | grep -c "bower.json" ` -gt 0 ]; then travis cache --branch TRAVIS_BRANCH --delete; fi
+  - if [ `echo $CHANGEDFILES | grep -c "bower.json" ` -gt 0 ]; then echo "Clearing bower_components cache"; rm -r zeppelin-web/bower_components; else echo "Using cached bower_components."; fi
+
+before_install:
   - echo "MAVEN_OPTS='-Xms1024M -Xmx2048M -XX:MaxPermSize=1024m -XX:-UseGCOverheadLimit -Dorg.slf4j.simpleLogger.defaultLogLevel=warn'" >> ~/.mavenrc
   - ./testing/install_external_dependencies.sh
   - ls -la .spark-dist ${HOME}/.m2/repository/.cache/maven-download-plugin || true
