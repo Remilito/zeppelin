@@ -71,6 +71,7 @@ matrix:
 
 before_install:
   - whereis travis
+  - ls /usr/share/travis
   - CHANGEDFILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE)
   - echo $CHANGEDFILES 
   - if [ `echo $CHANGEDFILES | grep -c "bower.json" ` -gt 0 ]; then travis cache --branch TRAVIS_BRANCH --delete; fi
