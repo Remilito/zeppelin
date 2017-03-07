@@ -74,8 +74,8 @@ before_install:
   # check files included in commit range, clear cache if necessay.
   - CHANGEDFILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE)
   - echo $CHANGEDFILES
-  - BOWERCHANGED=`echo $CHANGEDFILES | grep -c "bower.json"`
-  - CLEARCACHE=`git log $TRAVIS_COMMIT_RANGE | grep -c -E "clear cache|cache clear"`
+  - BOWERCHANGED=$(echo $CHANGEDFILES | grep -c "bower.json")
+  - CLEARCACHE=$(git log $TRAVIS_COMMIT_RANGE | grep -c -E "clear cache|cache clear")
   - if [ "$BOWERCHANGED" -gt 0 ] || [ "$CLEARCACHE" -gt 0 ]; then echo "Clearing bower_components cache"; rm -r zeppelin-web/bower_components; npm cache clear; else echo "Using cached bower_components."; fi
 
   - echo "MAVEN_OPTS='-Xms1024M -Xmx2048M -XX:MaxPermSize=1024m -XX:-UseGCOverheadLimit -Dorg.slf4j.simpleLogger.defaultLogLevel=warn'" >> ~/.mavenrc
